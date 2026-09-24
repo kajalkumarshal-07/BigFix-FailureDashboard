@@ -1,0 +1,317 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1780" width="100%" height="100%" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <style>
+      .navy-bg { fill: #002244; }
+      .card { fill: #ffffff; stroke: #dce3eb; stroke-width: 1.5; rx: 12px; }
+      .title-main { font-size: 42px; font-weight: 800; fill: #ffffff; }
+      .badge-pill { fill: #004d80; rx: 14px; }
+      .badge-text { font-size: 15px; font-weight: 600; fill: #66ccff; }
+      .quote-text { font-size: 19px; font-weight: 500; fill: #d4eaf7; font-style: italic; }
+      .section-hdr { font-size: 18px; font-weight: 700; fill: #002b49; letter-spacing: 0.5px; }
+      .icon-circle { rx: 18px; }
+      .row-label { font-size: 14px; font-weight: 700; fill: #1c3d5a; }
+      .row-desc { font-size: 13.5px; fill: #4a5568; }
+      .col-header { rx: 8px; }
+      .col-title { font-size: 15px; font-weight: 700; fill: #ffffff; }
+      .col-body { font-size: 12.5px; fill: #2d3748; }
+      .tbl-hdr { font-size: 12px; font-weight: 700; fill: #4a5568; }
+      .tbl-cell { font-size: 11.5px; fill: #2d3748; }
+    </style>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="1780" fill="#f4f7fb"/>
+
+  <!-- Top Hero Banner -->
+  <path d="M 0 0 L 1200 0 L 1200 240 L 0 240 Z" fill="#001a33"/>
+  <rect x="0" y="235" width="1200" height="5" fill="#007acc"/>
+
+  <!-- Header Content -->
+  <circle cx="80" cy="75" r="32" fill="#0080ff"/>
+  <text x="80" y="87" font-size="34" font-weight="900" fill="#ffffff" text-anchor="middle">b</text>
+
+  <text x="130" y="70" class="title-main">BigFix Failed Device Dashboard</text>
+
+  <rect x="130" y="90" width="380" height="28" class="badge-pill"/>
+  <text x="145" y="109" class="badge-text">v2.0.0 · PowerShell 5.1 + WinForms · Zero install</text>
+
+  <text x="80" y="165" class="quote-text">“One screen. Every failed BigFix client. Root cause + fix in seconds.”</text>
+
+  <!-- Mini Mockup Panel inside Header (Top Right) -->
+  <rect x="760" y="30" width="400" height="185" rx="8" fill="#ffffff" stroke="#007acc" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="760" y="30" width="400" height="26" rx="8" fill="#003366"/>
+  <text x="775" y="47" font-size="11" font-weight="700" fill="#ffffff">BigFix Failed Device Dashboard — Live Console</text>
+  <rect x="770" y="65" width="45" height="18" rx="3" fill="#007acc"/><text x="792" y="78" font-size="9" fill="#fff" text-anchor="middle">Connect</text>
+  <rect x="820" y="65" width="40" height="18" rx="3" fill="#e2e8f0"/><text x="840" y="78" font-size="9" fill="#333" text-anchor="middle">Demo</text>
+  <rect x="865" y="65" width="45" height="18" rx="3" fill="#e2e8f0"/><text x="887" y="78" font-size="9" fill="#333" text-anchor="middle">Refresh</text>
+  <rect x="915" y="65" width="40" height="18" rx="3" fill="#e2e8f0"/><text x="935" y="78" font-size="9" fill="#333" text-anchor="middle">HTML</text>
+  <rect x="960" y="65" width="45" height="18" rx="3" fill="#e2e8f0"/><text x="982" y="78" font-size="9" fill="#333" text-anchor="middle">WinRM</text>
+
+  <!-- Tiles in Mini Mockup -->
+  <rect x="770" y="92" width="60" height="30" rx="4" fill="#0066cc"/><text x="800" y="105" font-size="8" fill="#fff" text-anchor="middle">Total</text><text x="800" y="118" font-size="11" font-weight="800" fill="#fff" text-anchor="middle">247</text>
+  <rect x="835" y="92" width="60" height="30" rx="4" fill="#28a745"/><text x="865" y="105" font-size="8" fill="#fff" text-anchor="middle">Devices</text><text x="865" y="118" font-size="11" font-weight="800" fill="#fff" text-anchor="middle">187</text>
+  <rect x="900" y="92" width="60" height="30" rx="4" fill="#fd7e14"/><text x="930" y="105" font-size="8" fill="#fff" text-anchor="middle">Offline</text><text x="930" y="118" font-size="11" font-weight="800" fill="#fff" text-anchor="middle">18</text>
+  <rect x="965" y="92" width="60" height="30" rx="4" fill="#6f42c1"/><text x="995" y="105" font-size="8" fill="#fff" text-anchor="middle">Fixlet</text><text x="995" y="118" font-size="11" font-weight="800" fill="#fff" text-anchor="middle">62</text>
+  <rect x="1030" y="92" width="60" height="30" rx="4" fill="#17a2b8"/><text x="1060" y="105" font-size="8" fill="#fff" text-anchor="middle">Compl.</text><text x="1060" y="118" font-size="11" font-weight="800" fill="#fff" text-anchor="middle">41</text>
+  <rect x="1095" y="92" width="60" height="30" rx="4" fill="#e83e8c"/><text x="1125" y="105" font-size="8" fill="#fff" text-anchor="middle">Deploy</text><text x="1125" y="118" font-size="11" font-weight="800" fill="#fff" text-anchor="middle">29</text>
+
+  <!-- Row Mockup Data -->
+  <rect x="770" y="130" width="380" height="18" fill="#f1f5f9"/>
+  <text x="775" y="143" font-size="8" font-family="monospace" fill="#000">PC-00123 | Offline | High | BF-RELAY-OFFLINE | Restart BESClient</text>
+  <rect x="770" y="152" width="380" height="18" fill="#ffffff"/>
+  <text x="775" y="165" font-size="8" font-family="monospace" fill="#000">SRV-1024 | Fixlet  | Crit | BF-DOWNLOAD      | Clear Cache + Requeue</text>
+  <rect x="770" y="174" width="380" height="18" fill="#f1f5f9"/>
+  <text x="775" y="187" font-size="8" font-family="monospace" fill="#000">LAP-3421 | Deploy  | Low  | BF-LOCK          | Clear MSI lock</text>
+
+  <!-- ROW 1: Summary (Left) & Headline Benefits (Right) -->
+  <!-- Left Card: Summary -->
+  <rect x="40" y="260" width="530" height="420" class="card" filter="url(#shadow)"/>
+  <rect x="40" y="260" width="530" height="48" rx="12" fill="#0b2e4f"/>
+  <text x="65" y="291" font-size="17" font-weight="700" fill="#ffffff">📋 POSTER SUMMARY (FOR IT ADMINS)</text>
+
+  <!-- Summary Items -->
+  <g transform="translate(65, 330)">
+    <circle cx="20" cy="20" r="18" fill="#e6f2ff"/>
+    <text x="20" y="26" font-size="14" font-weight="800" fill="#0066cc" text-anchor="middle">W</text>
+    <text x="50" y="15" class="row-label">What</text>
+    <text x="50" y="32" class="row-desc">Single-pane Windows dashboard for failed BigFix clients</text>
+  </g>
+  <g transform="translate(65, 395)">
+    <circle cx="20" cy="20" r="18" fill="#e6f2ff"/>
+    <text x="20" y="26" font-size="14" font-weight="800" fill="#0066cc" text-anchor="middle">U</text>
+    <text x="50" y="15" class="row-label">Who</text>
+    <text x="50" y="32" class="row-desc">BigFix admins, NOC / desktop ops, endpoint engineers</text>
+  </g>
+  <g transform="translate(65, 460)">
+    <circle cx="20" cy="20" r="18" fill="#e6f2ff"/>
+    <text x="20" y="26" font-size="14" font-weight="800" fill="#0066cc" text-anchor="middle">?</text>
+    <text x="50" y="15" class="row-label">Why</text>
+    <text x="50" y="32" class="row-desc">Stop tab-hopping Console → logs → tickets; see why &amp; how to fix</text>
+  </g>
+  <g transform="translate(65, 525)">
+    <circle cx="20" cy="20" r="18" fill="#e6f2ff"/>
+    <text x="20" y="26" font-size="14" font-weight="800" fill="#0066cc" text-anchor="middle">⚙</text>
+    <text x="50" y="15" class="row-label">How</text>
+    <text x="50" y="32" class="row-desc">Double-click launcher · live API · CSV import · offline cache</text>
+  </g>
+  <g transform="translate(65, 590)">
+    <circle cx="20" cy="20" r="18" fill="#e6f9ed"/>
+    <text x="20" y="26" font-size="14" font-weight="800" fill="#28a745" text-anchor="middle">✓</text>
+    <text x="50" y="15" class="row-label">Proof (-SelfTest → PASS)</text>
+    <text x="50" y="32" class="row-desc">9/9 root-cause · 25/25 runbook · 48/48 fix solutions · 7/7 v2 checks</text>
+  </g>
+
+  <!-- Right Card: Benefits -->
+  <rect x="610" y="260" width="550" height="420" class="card" filter="url(#shadow)"/>
+  <rect x="610" y="260" width="550" height="48" rx="12" fill="#0b2e4f"/>
+  <text x="635" y="291" font-size="17" font-weight="700" fill="#ffffff">★ HEADLINE BENEFITS</text>
+
+  <g transform="translate(635, 325)">
+    <circle cx="16" cy="16" r="16" fill="#007acc"/>
+    <text x="16" y="22" font-size="13" fill="#fff" text-anchor="middle">👁</text>
+    <text x="44" y="14" class="row-label">See everything</text>
+    <text x="44" y="30" class="row-desc">Offline, Fixlet, Compliance, Software deploy in one color-coded grid</text>
+  </g>
+  <g transform="translate(635, 375)">
+    <circle cx="16" cy="16" r="16" fill="#e056fd"/>
+    <text x="16" y="22" font-size="13" fill="#fff" text-anchor="middle">🧠</text>
+    <text x="44" y="14" class="row-label">Know why</text>
+    <text x="44" y="30" class="row-desc">42 rules → Root Cause + Remediation on every failure row</text>
+  </g>
+  <g transform="translate(635, 425)">
+    <circle cx="16" cy="16" r="16" fill="#ff7675"/>
+    <text x="16" y="22" font-size="13" fill="#fff" text-anchor="middle">⚡</text>
+    <text x="44" y="14" class="row-label">Act fast</text>
+    <text x="44" y="30" class="row-desc">Timeline, charts, 43 solutions (34 WinRM + 9 manual), dry-run first</text>
+  </g>
+  <g transform="translate(635, 475)">
+    <circle cx="16" cy="16" r="16" fill="#0984e3"/>
+    <text x="16" y="22" font-size="13" fill="#fff" text-anchor="middle">☁</text>
+    <text x="44" y="14" class="row-label">Stay online</text>
+    <text x="44" y="30" class="row-desc">Async API (UI never freezes), session cache, CSV/XML import, demo mode</text>
+  </g>
+  <g transform="translate(635, 525)">
+    <circle cx="16" cy="16" r="16" fill="#00b894"/>
+    <text x="16" y="22" font-size="13" fill="#fff" text-anchor="middle">↗</text>
+    <text x="44" y="14" class="row-label">Share easily</text>
+    <text x="44" y="30" class="row-desc">HTML executive report, CSV/JSON, email digest, ticket webhook</text>
+  </g>
+  <g transform="translate(635, 575)">
+    <circle cx="16" cy="16" r="16" fill="#6c5ce7"/>
+    <text x="16" y="22" font-size="13" fill="#fff" text-anchor="middle">📅</text>
+    <text x="44" y="14" class="row-label">Automate</text>
+    <text x="44" y="30" class="row-desc">Headless CLI + daily Scheduled Task (07:00) with history logging</text>
+  </g>
+  <g transform="translate(635, 625)">
+    <circle cx="16" cy="16" r="16" fill="#2ed573"/>
+    <text x="16" y="22" font-size="13" fill="#fff" text-anchor="middle">🛡</text>
+    <text x="44" y="14" class="row-label">Safe &amp; Credential Protected</text>
+    <text x="44" y="30" class="row-desc">Passwords never written to disk; Skip TLS off by default; confirm before fix</text>
+  </g>
+
+  <!-- ROW 2: Feature Grid (4 Pillars) -->
+  <rect x="40" y="705" width="1120" height="240" class="card" filter="url(#shadow)"/>
+  <rect x="40" y="705" width="1120" height="42" rx="12" fill="#0b2e4f"/>
+  <text x="65" y="732" font-size="16" font-weight="700" fill="#ffffff">⚙ FEATURE GRID (THE 4 PILLARS)</text>
+
+  <!-- Col 1: Connect -->
+  <rect x="60" y="760" width="250" height="34" rx="6" fill="#007acc"/>
+  <text x="185" y="782" class="col-title" text-anchor="middle">🔗 CONNECT</text>
+  <text x="70" y="815" class="col-body">• BigFix REST API (async job)</text>
+  <text x="70" y="835" class="col-body">• CSV / XML import fallback</text>
+  <text x="70" y="855" class="col-body">• Offline session cache</text>
+  <text x="70" y="875" class="col-body">• Demo mode (13 sample rows)</text>
+  <text x="70" y="895" class="col-body">• Background auto-refresh timer</text>
+
+  <!-- Col 2: Analyze -->
+  <rect x="330" y="760" width="250" height="34" rx="6" fill="#10ac84"/>
+  <text x="455" y="782" class="col-title" text-anchor="middle">🔍 ANALYZE</text>
+  <text x="340" y="815" class="col-body">• Root-cause engine (42 rules)</text>
+  <text x="340" y="835" class="col-body">• Severity &amp; category tiles</text>
+  <text x="340" y="855" class="col-body">• Device view + failure timeline</text>
+  <text x="340" y="875" class="col-body">• Real-time search &amp; multi-filters</text>
+  <text x="340" y="895" class="col-body">• Visual breakdown charts</text>
+
+  <!-- Col 3: Remediate -->
+  <rect x="600" y="760" width="250" height="34" rx="6" fill="#ff9f43"/>
+  <text x="725" y="782" class="col-title" text-anchor="middle">🔧 REMEDIATE</text>
+  <text x="610" y="815" class="col-body">• 43 solutions (34 WinRM, 9 manual)</text>
+  <text x="610" y="835" class="col-body">• Dry-run → Preview → Fix</text>
+  <text x="610" y="855" class="col-body">• Pre-flight Test-WSMan probe</text>
+  <text x="610" y="875" class="col-body">• Matched rule scripts only</text>
+  <text x="610" y="895" class="col-body">• Auto-retry failed hosts &amp; log</text>
+
+  <!-- Col 4: Report -->
+  <rect x="870" y="760" width="265" height="34" rx="6" fill="#9b59b6"/>
+  <text x="1002" y="782" class="col-title" text-anchor="middle">📑 REPORT</text>
+  <text x="880" y="815" class="col-body">• Executive HTML report output</text>
+  <text x="880" y="835" class="col-body">• Excel-ready CSV &amp; JSON dump</text>
+  <text x="880" y="855" class="col-body">• Automated SMTP email digest</text>
+  <text x="880" y="875" class="col-body">• Webhook POST (ServiceNow / Jira)</text>
+  <text x="880" y="895" class="col-body">• Daily scheduled task (07:00 AM)</text>
+
+  <!-- ROW 3: GUI layout, Quick start, Mode Matrix -->
+  <!-- Left Box: GUI Wireframe -->
+  <rect x="40" y="970" width="350" height="420" class="card" filter="url(#shadow)"/>
+  <rect x="40" y="970" width="350" height="40" rx="12" fill="#0b2e4f"/>
+  <text x="65" y="995" font-size="15" font-weight="700" fill="#ffffff">🖥 GUI AT A GLANCE</text>
+
+  <rect x="55" y="1025" width="320" height="35" fill="#e9ecef" stroke="#ced4da"/>
+  <text x="62" y="1046" font-size="10.5" font-family="monospace">Toolbar: Server | User | Pass | Connect | Export</text>
+
+  <rect x="55" y="1068" width="320" height="40" fill="#dee2e6" stroke="#ced4da"/>
+  <text x="62" y="1092" font-size="10" font-family="monospace">[Total] [Devices] [Offline] [Fixlet] [Compl.] [Deploy]</text>
+
+  <rect x="55" y="1115" width="320" height="25" fill="#f8f9fa" stroke="#ced4da"/>
+  <text x="62" y="1131" font-size="10" font-family="monospace">Filters: Category ▾ | Severity ▾ | Search [     ]</text>
+
+  <rect x="55" y="1148" width="190" height="205" fill="#ffffff" stroke="#ced4da"/>
+  <text x="62" y="1165" font-size="10" font-weight="700" fill="#0066cc">Failure Grid</text>
+  <text x="62" y="1185" font-size="9" font-family="monospace">Host: PC-00123</text>
+  <text x="62" y="1200" font-size="9" font-family="monospace">Status: Offline (Crit)</text>
+  <text x="62" y="1225" font-size="9" font-family="monospace">Host: SRV-1024</text>
+  <text x="62" y="1240" font-size="9" font-family="monospace">Status: HashMismatch</text>
+  <text x="62" y="1265" font-size="9" font-family="monospace">Host: LAP-3421</text>
+  <text x="62" y="1280" font-size="9" font-family="monospace">Status: LockWait</text>
+
+  <rect x="250" y="1148" width="125" height="205" fill="#f8f9fa" stroke="#ced4da"/>
+  <text x="256" y="1165" font-size="9.5" font-weight="700" fill="#2d3748">Detail Pane</text>
+  <text x="256" y="1185" font-size="8.5" fill="#718096">• Raw Error</text>
+  <text x="256" y="1205" font-size="8.5" fill="#718096">• Root Cause</text>
+  <text x="256" y="1225" font-size="8.5" fill="#718096">• Remediation</text>
+  <text x="256" y="1245" font-size="8.5" fill="#718096">• Host Timeline</text>
+
+  <rect x="55" y="1358" width="320" height="20" fill="#002b49"/>
+  <text x="62" y="1372" font-size="9" fill="#ffffff" font-family="monospace">Status: Connected | WinRM Ready | SelfTest: PASS</text>
+
+  <!-- Middle Box: Quick Start (3 Steps) -->
+  <rect x="410" y="970" width="360" height="420" class="card" filter="url(#shadow)"/>
+  <rect x="410" y="970" width="360" height="40" rx="12" fill="#0b2e4f"/>
+  <text x="435" y="995" font-size="15" font-weight="700" fill="#ffffff">🚀 QUICK START (3 STEPS)</text>
+
+  <g transform="translate(430, 1030)">
+    <circle cx="18" cy="18" r="18" fill="#007acc"/>
+    <text x="18" y="24" font-size="16" font-weight="800" fill="#fff" text-anchor="middle">1</text>
+    <text x="46" y="16" font-size="14" font-weight="700" fill="#1a202c">Double-click Launcher</text>
+    <text x="46" y="34" font-size="12.5" fill="#4a5568">Launch-BigFixDashboard.cmd</text>
+  </g>
+
+  <g transform="translate(430, 1105)">
+    <circle cx="18" cy="18" r="18" fill="#007acc"/>
+    <text x="18" y="24" font-size="16" font-weight="800" fill="#fff" text-anchor="middle">2</text>
+    <text x="46" y="16" font-size="14" font-weight="700" fill="#1a202c">Connect or Load Data</text>
+    <text x="46" y="34" font-size="12.5" fill="#4a5568">Demo loads instantly — or enter Server &amp;</text>
+    <text x="46" y="50" font-size="12.5" fill="#4a5568">credentials → click "Connect API"</text>
+  </g>
+
+  <g transform="translate(430, 1180)">
+    <circle cx="18" cy="18" r="18" fill="#007acc"/>
+    <text x="18" y="24" font-size="16" font-weight="800" fill="#fff" text-anchor="middle">3</text>
+    <text x="46" y="16" font-size="14" font-weight="700" fill="#1a202c">Analyze &amp; Remediate</text>
+    <text x="46" y="34" font-size="12.5" fill="#4a5568">Inspect Root Cause / Remediation</text>
+    <text x="46" y="50" font-size="12.5" fill="#4a5568">Remote Fix → Preview plan → WinRM Fix</text>
+  </g>
+
+  <!-- Self-test code snippet -->
+  <rect x="425" y="1260" width="330" height="110" rx="6" fill="#1a202c"/>
+  <text x="440" y="1283" font-size="11" font-weight="700" fill="#a0aec0"># Headless Self-Test (Zero GUI Verification)</text>
+  <text x="440" y="1305" font-size="11" font-family="monospace" fill="#68d391">powershell -ExecutionPolicy Bypass \</text>
+  <text x="440" y="1323" font-size="11" font-family="monospace" fill="#68d391">  -File .\BigFix-FailureDashboard.ps1 \</text>
+  <text x="440" y="1341" font-size="11" font-family="monospace" fill="#68d391">  -SelfTest</text>
+  <text x="440" y="1360" font-size="10.5" font-family="monospace" fill="#cbd5e0"># Exit code 0 = ALL PASSED</text>
+
+  <!-- Right Box: Mode Matrix -->
+  <rect x="790" y="970" width="370" height="420" class="card" filter="url(#shadow)"/>
+  <rect x="790" y="970" width="370" height="40" rx="12" fill="#0b2e4f"/>
+  <text x="815" y="995" font-size="15" font-weight="700" fill="#ffffff">🎯 WHEN TO USE WHICH MODE</text>
+
+  <!-- Mode Table Headers -->
+  <rect x="805" y="1025" width="340" height="26" fill="#edf2f7"/>
+  <text x="815" y="1042" class="tbl-hdr">SCENARIO</text>
+  <text x="980" y="1042" class="tbl-hdr">MODE TO USE</text>
+
+  <text x="815" y="1075" class="tbl-cell" font-weight="600">Live estate health</text>
+  <text x="980" y="1075" class="tbl-cell" fill="#0066cc">Connect API (async)</text>
+  <line x1="805" y1="1090" x2="1145" y2="1090" stroke="#e2e8f0"/>
+
+  <text x="815" y="1115" class="tbl-cell" font-weight="600">API down / Air-gapped</text>
+  <text x="980" y="1115" class="tbl-cell" fill="#0066cc">Import Report or -UseCache</text>
+  <line x1="805" y1="1130" x2="1145" y2="1130" stroke="#e2e8f0"/>
+
+  <text x="815" y="1155" class="tbl-cell" font-weight="600">Training / Screenshots</text>
+  <text x="980" y="1155" class="tbl-cell" fill="#0066cc">Load Demo (13 rows)</text>
+  <line x1="805" y1="1170" x2="1145" y2="1170" stroke="#e2e8f0"/>
+
+  <text x="815" y="1195" class="tbl-cell" font-weight="600">Executive Daily Brief</text>
+  <text x="980" y="1195" class="tbl-cell" fill="#0066cc">Headless -ExportHtml (07:00)</text>
+  <line x1="805" y1="1210" x2="1145" y2="1210" stroke="#e2e8f0"/>
+
+  <text x="815" y="1235" class="tbl-cell" font-weight="600">ServiceNow / Jira Feed</text>
+  <text x="980" y="1235" class="tbl-cell" fill="#0066cc">CSV/JSON Export / Webhook</text>
+  <line x1="805" y1="1250" x2="1145" y2="1250" stroke="#e2e8f0"/>
+
+  <text x="815" y="1275" class="tbl-cell" font-weight="600">Apply Matched Fixes</text>
+  <text x="980" y="1275" class="tbl-cell" fill="#0066cc">Remote Fix (WinRM)</text>
+  <line x1="805" y1="1290" x2="1145" y2="1290" stroke="#e2e8f0"/>
+
+  <text x="815" y="1315" class="tbl-cell" font-weight="600">Day-to-day guidance</text>
+  <text x="980" y="1315" class="tbl-cell" fill="#0066cc">Runbook (10 topics)</text>
+  <line x1="805" y1="1330" x2="1145" y2="1330" stroke="#e2e8f0"/>
+
+  <text x="815" y="1355" class="tbl-cell" font-weight="600">Validate code changes</text>
+  <text x="980" y="1355" class="tbl-cell" fill="#0066cc">-SelfTest flag (CI)</text>
+
+  <!-- Bottom Strip / Footer -->
+  <rect x="0" y="1420" width="1200" height="80" fill="#001a33"/>
+  <text x="60" y="1465" font-size="15" fill="#a0aec0">
+    <tspan fill="#0080ff" font-weight="700">[■]</tspan> PowerShell 5.1 + WinForms
+    <tspan fill="#00b894" font-weight="700"> [✔]</tspan> Secure In-Memory Creds
+    <tspan fill="#ff7675" font-weight="700"> [⚡]</tspan> Fast Async API
+    <tspan fill="#fdcb6e" font-weight="700"> [⚙]</tspan> Zero Install
+    <tspan fill="#6c5ce7" font-weight="700"> [◎]</tspan> 43 Fix Catalogs
+  </text>
+  <text x="1140" y="1465" font-size="19" font-weight="700" fill="#00d2d3" font-style="italic" text-anchor="end">Less firefighting. More fixing.</text>
+</svg>

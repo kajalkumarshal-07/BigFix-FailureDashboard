@@ -4,6 +4,8 @@
 
 > **One screen. Every failed BigFix client. Root cause + fix in seconds.**
 
+![BigFix Failed Device Dashboard poster](docs/poster.svg)
+
 ---
 
 ## Poster summary (for IT admins)
