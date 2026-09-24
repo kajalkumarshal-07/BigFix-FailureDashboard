@@ -1,0 +1,14 @@
+DeviceName,IPAddress,LastReportTime,Category,Severity,Source,Component,ErrorCode,ErrorMessage,Status
+FIN-PC-014,10.20.4.114,2026-09-22 06:10:00,FixletFailure,High,Import,BigFix Patch Deployment,,Failed to download prefetch block - relay unavailable,Failed
+HR-LT-207,10.20.7.207,2026-09-19 11:20:00,Offline,Critical,Import,BESClient,,Client not reporting - last report more than threshold ago,Offline
+ENG-SRV-03,10.20.12.3,2026-09-21 18:02:00,FixletFailure,High,Import,BigFix Content Download,,Download Failed - content hash mismatch from relay,Failed
+ENG-SRV-03,10.20.12.3,2026-09-21 18:02:00,FixletFailure,High,Import,7-Zip Install,,Access is denied when writing to C:\Program Files\7-Zip,Failed
+OPS-LT-119,10.20.9.119,2026-09-22 07:30:00,Offline,Critical,Import,BESClient,,Client not reporting - BESClient service stopped,Offline
+MFG-WS-441,10.20.15.41,2026-09-22 05:15:00,ComplianceFailure,High,Import,Baseline: Windows 11 CIS L1,,Not compliant - Secure Boot disabled and BitLocker off,Failed
+MFG-WS-441,10.20.15.41,2026-09-22 05:15:00,SoftwareDeployment,High,Import,CrowdStrike Sensor,,Application deployment failed - exit code 1603 (insufficient disk space),Failed
+LAB-VM-009,10.20.30.9,2026-09-22 09:01:00,FixletFailure,Medium,Import,BigFix Baseline: TLS Hardening,,Relevance evaluation error - singular statement expected,Failed
+LAB-VM-009,10.20.30.9,2026-09-22 09:01:00,SoftwareDeployment,High,Import,BigFix Inventory Scanner,,MaxArchiveSize exceeded - scan results not uploaded,Failed
+SALES-LT-088,10.20.6.88,2026-09-22 04:40:00,FixletFailure,High,Import,BigFix Action,,Action status: Download Failed - pending downloads stuck,Failed
+SALES-LT-088,10.20.6.88,2026-09-22 04:40:00,SoftwareDeployment,Medium,Import,Zoom Client,,The system cannot find the file specified. (0x80070002),Failed
+IT-ADMIN-01,10.20.1.10,2026-09-22 08:58:00,ComplianceFailure,High,Import,Baseline: Password Policy,,Compliance check failed - minimum password length below policy,Failed
+EXEC-LT-002,10.20.2.50,2026-09-18 11:20:00,Offline,Critical,Import,BESClient,,Client not reporting - device offline or BESClient stopped,Offline

@@ -1,0 +1,417 @@
+================================================================================
+BIGFIX FAILED DEVICE DASHBOARD - TOOL DOCUMENTATION
+================================================================================
+Version   : 2.0.0
+Location  : C:\Users\SAM\BigFix-FailureDashboard\
+Type      : PowerShell 5.1 + WinForms GUI + headless export mode
+Author    : Generated for BigFix client failure monitoring
+See also  : README.md (feature overview + Remote Fix / WinRM)
+
+================================================================================
+1. WHAT IS THIS TOOL?
+================================================================================
+
+A Windows desktop GUI that shows the detailed status of failed BigFix clients
+(devices) in one place. For each failed device it displays:
+
+  - Device name, IP, last report time
+  - Failure category (Offline / Fixlet / Compliance / Software deploy)
+  - Severity (Critical / High / Medium / Low)
+  - Raw error message and error code
+  - Root cause analysis (why it failed)
+  - Remediation steps (how to fix it)
+
+v2 adds: background (async) API connect, charts, device grouping/timeline,
+HTML + JSON export, email digest, ticket webhook, auto-refresh + tray alerts,
+session cache offline fallback, settings persistence (no passwords), extra
+root-cause rules, and headless CLI export for scheduled tasks.
+
+Designed for BigFix administrators and NOC teams who need a quick,
+readable view of "which devices failed and why."
+
+================================================================================
+2. FILE STRUCTURE
+================================================================================
+
+BigFix-FailureDashboard\
+|
++-- BigFix-FailureDashboard.ps1   Main script (GUI + API + analysis + Remote Fix
+|                                  + headless export + ApiWorker)
++-- Launch-BigFixDashboard.cmd    Double-click launcher (hidden console + STA)
++-- README.md                     Feature overview and working concepts
++-- TOOL-EXPLANATION.txt          This document
++-- settings.json                 Runtime prefs (no passwords)
++-- cache\last-pull.json          Last successful API pull (offline fallback)
++-- reports\                      Scheduled-task outputs (HTML / history / last-run.log)
+|   +-- Run-DailyReport.ps1       Wrapper for "BigFix Dashboard Daily Report" task
++-- sample-data\
+    +-- sample-failures.csv       Sample import file for offline testing
++-- BigFix_Failure_Dashboard_..pptx  20-slide feature / admin-benefits deck
+
+================================================================================
+3. HOW IT WORKS
+================================================================================
+
+3.1 STARTUP
+----------
+  1. User runs Launch-BigFixDashboard.cmd (or the .ps1 directly).
+  2. Launcher starts PowerShell with -WindowStyle Hidden.
+  3. Script ensures STA mode for WinForms (skipped for -ApiWorker / exports).
+  4. Loads settings.json (server, thresholds, SMTP, ticket URL, auto-refresh).
+  5. Builds UI: toolbar, tiles, filters, tabs (Dashboard, Charts, Remote Fix).
+  6. Auto-loads demo (or session cache with -UseCache).
+
+3.2 DATA SOURCES (3 modes + cache)
+----------------------------------
+  Mode A - BigFix REST API (live, ASYNC):
+    - Enter Server URL (default https://localhost:52311), User, Password.
+    - Click "Connect API" -> background job (child powershell -ApiWorker)
+      writes progress.txt + result.json; UI timer polls; UI stays responsive.
+    - Two-phase: inventory paints grid first, failure scan reuses auth/session.
+    - Parallel relevance queries (runspace pool) + transient retry.
+    - Success -> saves cache\last-pull.json for offline refresh.
+    - Endpoints: /api/help, /api/computers, /api/query, /api/actions.
+    - SessionToken header reused; optional Skip TLS cert check.
+    - Offline threshold (default 4h); API times treated as GMT.
+
+  Mode B - Import Report (fallback):
+    - CSV or XML; flexible column aliases.
+    - XML: <Failure> nodes or BES-style <Client>/<Computer>.
+
+  Mode C - Demo / Cache:
+    - Demo: 13 rows / 9 devices; no server.
+    - Cache: last pull via -UseCache or Refresh when API unavailable.
+
+  Refresh / Auto-refresh (minutes) re-runs last source or cache.
+
+3.3 FAILURE CATEGORIES
+----------------------
+  Offline / FixletFailure / ComplianceFailure / SoftwareDeployment / Healthy
+
+3.4 ROOT-CAUSE ANALYSIS ENGINE
+-------------------------------
+  New-FailureRecord -> Get-FailureAnalysis:
+    1. Concatenate ErrorMessage + ErrorCode + Component.
+    2. Match 42 regex rules in $script:RootCauseRules
+       (includes BF-PROXY, BF-CERT, BF-FIREWALL, BF-LOW-MEMORY,
+        BF-PENDING-REBOOT, BF-GPO, BF-VPN, BF-DISK-IO, BF-SCCM-CONFLICT,
+        BF-WMI, BF-ACCOUNT-LOCKED, BF-UAC, BF-TIMESYNC, ...).
+    3. Category-hint prefers matching category when several match.
+    4. Store RootCause + Remediation + MatchedRule on the record.
+  Fix solutions coverage validated by -SelfTest (>=30 solutions, >=35 rules).
+  Full catalog (43 solutions + 4 category defaults): README.md "Remote fix
+  catalog" — 34 auto/WinRM (Manual=$false) + 9 manual (Manual=$true).
+
+3.5 GUI LAYOUT
+--------------
+  Top toolbar  : Server / User / Password / Offline threshold / Auto-refresh
+                 Buttons: Connect, Import, Demo, Refresh, Export CSV,
+                 HTML, Email, Ticket, Runbook, Settings, About
+  Summary tiles: Total, Devices, Offline, Fixlet, Compliance,
+                 Software, Critical+High, Healthy
+
+  Tabs
+  ----
+  Dashboard    : Filter bar + Device view checkbox + grid + detail pane
+                 (Raw Error, Root Cause, Remediation, timeline in device view)
+  Charts       : Category / Severity / Top devices / Top rules
+                 (System.Windows.Forms.DataVisualization; label fallback)
+  Remote Fix   : LAST tab - scope + severity, credentials, timeout,
+                 Test WinRM pre-flight, Preview, Fix, Retry failed,
+                 Export log, Stop, live execution log + run history CSV
+
+  Filter bar   : Category, Severity, Search, Device view, Clear
+  Status bar   : Last operation / API job progress
+
+3.5b RUNBOOK - 10 topics (unchanged from v1): offline, relay, console,
+     Inventory upload, WebUI/DB, maintenance, action status, slow clients,
+     client install, Web Reports performance. Search + export all.
+
+3.5c REMOTE FIX (WinRM) - LAST TAB
+  Scope: Selected | Filtered | All failed (Healthy skipped; device view
+         expands selected device).
+  Severity: All | Critical only | Critical + High (Get-FixPlan -MinSeverity).
+  Workflow: scope+severity -> Test WinRM (Test-WSMan) -> Preview plan ->
+            Fix (confirm / dry-run) -> log -> Retry failed / Export log.
+  Timeout: NumericUpDown 5-300s -> New-PSSessionOption Open/OperationTimeout.
+  Dry-run / Preview / Fix with confirm; rule-matched scripts only.
+  Progress: [n/N] Connecting WinRM -> host (duration in seconds).
+  Stop: cooperative - remaining hosts marked Skipped after current host.
+  Retry failed: rebuild plan from $script:LastFixPlan for last
+                Failed / WinRM-Failed results ($script:LastFixResults).
+  Run history: reports\history\fix-run-yyyyMMdd-HHmmss.csv (Save-FixRunHistory).
+  Statuses: OK | Failed | WinRM-Failed | Manual | WhatIf | Skipped
+
+3.6 EXPORT / DELIVERY
+---------------------
+  CSV     : filtered rows, severity-sorted, UTF-8 BOM (Excel-friendly)
+  HTML    : executive report (tiles + table + print CSS) via -ExportHtml
+  JSON    : machine-readable via -ExportJson
+  Email   : Send-FailureDigest (Send-MailMessage, BodyAsHtml); SMTP from
+            settings.json; password only $env:BIGFIX_SMTP_PASSWORD
+  Ticket  : Send-TicketWebhook JSON POST to configured URL
+  Tray    : NotifyIcon balloon when Critical count rises (auto-refresh)
+
+3.7 SETTINGS & CACHE
+--------------------
+  settings.json  : Server, Username, OfflineThresholdHours, AutoRefreshMinutes,
+                   DeviceGroupView, ExportDirectory, SMTP (host/port/from/to/ssl),
+                   Ticket (Url/Headers). NEVER stores passwords.
+  cache\last-pull.json : Inventory + failures from last successful API pull
+                   (Get-SessionCache / Save-SessionCache).
+
+3.8 AUTO-REFRESH / ALERTS
+-------------------------
+  Toolbar numeric: minutes (0 = off). Update-AutoRefreshTimer starts/stops
+  $script:AutoRefreshTimer. On each tick: refresh current source (skipped
+  while a background API job is running). Test-NewCriticalAlerts can show a
+  tray balloon for new Critical rows.
+
+3.9 ASYNC API (v2)
+------------------
+  Start-AsyncApiConnect / Start-AsyncApiPhase:
+    - GUI writes temp cfg JSON (includes password for the child only).
+    - Start-Job launches: powershell.exe -File <script> -ApiWorker <cfg> -NoRelaunch
+    - Worker runs inventory phase then failures phase (SeedJson), writes
+      progress.txt + result.json, deletes cfg.
+    - $script:BgTimer (500ms) polls; Complete-AsyncApiPhase loads records,
+      saves cache, clears temp dir.
+  First connect: InventoryOnly phase then FailuresOnly phase with seed.
+  Refresh: single full pull when possible (IsRefresh flag).
+
+3.10 HEADLESS MODE
+------------------
+  Parameters: -ExportHtml -ExportCsv -ExportJson -Email -ImportPath -UseCache
+              -Password / $env:BIGFIX_DASH_PASSWORD -ApiWorker -SelfTest
+  Exports/email run without GUI and exit with code 0/1.
+  Example scheduled task: see README "Headless / scheduled use".
+
+  Installed task (this machine):
+    TaskName : BigFix Dashboard Daily Report
+    Schedule : Daily 07:00
+    Wrapper  : reports\Run-DailyReport.ps1
+    Behavior : -UseCache if cache\last-pull.json exists, else -ImportPath sample CSV
+    Outputs  : reports\bf-report-YYYYMMDD.html
+               reports\history\bf-report-YYYYMMDD.csv / .json
+               reports\last-run.log
+    Verified : dry-run wrapper exit 0; HTML written (9278 bytes sample)
+
+  Smoke status:
+    - Headless import path: PASS (13 rows -> HTML + CSV + JSON, exit 0)
+    - Live BigFix API: SKIPPED on this host (no BES service / TCP 52311,
+      no BIGFIX_DASH_PASSWORD). Run against a real server with -Server
+      -Username and $env:BIGFIX_DASH_PASSWORD, or Connect API once in GUI.
+
+3.11 SELF-TEST
+--------------
+  powershell -File BigFix-FailureDashboard.ps1 -SelfTest
+
+  Checks:
+    - Demo data loads; sample CSV imports
+    - Root-cause spot checks (9)
+    - Runbook checks (25)
+    - Fix-solution checks (48) - coverage, severity filter, scope relevance, WhatIf
+    - v2 feature checks (7): HTML/CSV/JSON export smoke, device aggregates,
+      cache round-trip, settings round-trip, rule/solution minimums
+  Exit code 0 = PASS, 1 = FAIL
+
+3.12 CRASH FIXES (v2.0.0 GUI HARDENING)
+----------------------------------------
+  Issue A - "The property 'Text' cannot be found" on GUI open
+    Cause : New-DashChart used local $title which overwrote param $Title
+            (PowerShell variables are case-insensitive).
+    Fix   : Renamed to $chTitle / param $ChartTitle; guard empty Legends.
+
+  Issue B - JIT dialog: "Argument types do not match" (ArgumentException)
+            in PSToObjectArrayBinder / PSEnumerableBinder.MaybeDebase
+    Cause : $rows = if (...) { @(...) } else { @($script:AllRecords) }
+            boxing a List[object] through the if-expression binder (WinPS 5.1).
+    Fix   : Split if/else into separate assignments; use .ToArray().
+            Same pattern fixed in Update-Charts, Get-DeviceAggregates,
+            Get-FailureSummary, Get-VisibleRecords, export fallbacks.
+
+  Issue C - Connect API dialog: "BigFix API connection failed ...
+            Argument types do not match"
+    Cause : ConvertTo-ApiResultJson used Devices=@($Result.Devices) and
+            Failures=@($Result.Failures). Those values are List[object]
+            from Get-BigFixApiData; WinPS 5.1 @($List[object]) throws
+            ArgumentException. ApiWorker catch wrote that text into
+            result.json; GUI title = "BigFix API connection failed".
+    Fix   : ConvertTo-ObjectArray helper (foreach + .ToArray(), never @()
+            on a generic list) in ConvertTo-ApiResultJson, phase-2 seed
+            copy, cache/headless load, summary/aggregates/exports, and
+            Remote Fix scope.
+    Verify: worker serialize unit path OK; -SelfTest exit 0; Connect API
+            on prod reaches "Devices loaded..." without the dialog.
+
+  Issue D - Settings / Email / Ticket buttons appear dead
+    Cause : Settings dialog was 520x560; content ran to ~y=624. Save
+            overlapped SMTP fields; ticket/webhook fields were off-screen
+            or unreachable, so Smtp.Enable / Ticket.Enable stayed false.
+            Email/Ticket then threw "not enabled". Ticket also used
+            Remote Fix's Selected scope (wrong empty-state).
+    Fix   : Dialog 540x720 + AutoScroll; Save below all fields with
+            validation (SMTP host/From/To, webhook URL); Save-AppSettings
+            returns success; status bar reports settings path; Email/
+            Ticket prompt to open Settings when disabled; Ticket posts
+            visible non-Healthy rows; clearer Send-FailureDigest /
+            Send-TicketWebhook errors (session password, missing fields).
+    Verify: -SelfTest exit 0; Settings -> Save updates settings.json;
+            Email/Ticket show Settings prompt when Enable=false.
+
+  Diagnostics:
+    - WinForms ThreadException logger writes
+      %TEMP%\BigFixDashboard-UIErrors.log
+    - Add_Shown / Update-GridFromRecords try/catch logs PositionMessage
+
+  Verify: -SelfTest exit 0 + GUI opens with title "... v2.0.0" and no JIT box.
+
+================================================================================
+4. HOW TO USE (QUICK START)
+================================================================================
+
+  1. Double-click  Launch-BigFixDashboard.cmd
+  2. Demo data appears automatically.
+  3. Click a row -> Root Cause / Remediation on the right.
+  4. Filter Category / Search; toggle Device view for per-device timeline.
+  5. Live data: Server / User / Password -> Connect API (background).
+  6. Charts tab for category/severity/top-device visuals.
+  7. Export CSV / HTML / Email / Ticket as needed.
+  8. Settings: SMTP, ticket webhook, auto-refresh minutes, thresholds.
+  9. Runbook for 10 ops topics; last tab Remote Fix: Preview -> Fix.
+ 10. Headless: -ExportHtml ... -UseCache for scheduled reports.
+
+================================================================================
+5. ADVANTAGES
+================================================================================
+
+  + Single pane of glass for all failure types
+  + Root cause + remediation built in (42 rules)
+  + Works without a server (demo, import, cache)
+  + Async API - UI remains responsive during large pulls
+  + Parallel relevance + retry for scale
+  + Session cache offline fallback
+  + Charts + device grouping for management views
+  + HTML executive report + JSON + Excel-friendly CSV
+  + Email digest + ticket webhook for workflows
+  + Auto-refresh + tray critical alerts
+  + Settings persistence without storing secrets
+  + Headless CLI for Scheduled Tasks / CI
+  + Scoped remote remediation (Remote Fix, dry-run)
+  + Self-test switch for CI
+  + Lightweight / zero install (PowerShell + WinForms)
+
+================================================================================
+6. DISADVANTAGES / LIMITATIONS
+================================================================================
+
+  - Windows-only GUI (WinForms); headless still Windows-oriented
+  - PowerShell 5.1 / .NET Framework primary target (PS7 less tested)
+  - Relevance is version-dependent; import/cache cover gaps
+  - No N+1 /api/action/{id}/status probes (too slow)
+  - Remote Fix is WinRM-only (not BigFix Take Action); manual rules need console
+  - Basic auth only (SessionToken reuse); no OAuth/SAML flow
+  - Password on form is memory-only plaintext (not disk) for Basic auth
+  - SMTP/ticket need reachable network + settings configuration
+  - Charts need DataVisualization assembly (graceful label fallback)
+  - Clock skew affects offline threshold (uses local "now")
+  - Not a replacement for BigFix Console deep debugging
+
+================================================================================
+7. SECURITY NOTES
+================================================================================
+
+  - BigFix / WinRM / SMTP passwords are never written to settings.json.
+  - SMTP password only via $env:BIGFIX_SMTP_PASSWORD (headless/email).
+  - Skip TLS cert check default OFF (MITM risk if enabled).
+  - REST does not follow HTTP redirects (no auth forwarding).
+  - Offline BF-RELAY-OFFLINE deletes __BESData only under guarded conditions;
+    BF-CACHE-CORRUPT always wipes __BESData (destructive).
+  - Remote Fix requires WinRM rights; confirm before execute (dry-run option).
+  - -ExecutionPolicy Bypass via launcher; prefer signing in production.
+  - Exports may contain hostnames/IPs - treat as internal.
+  - cache\last-pull.json may contain inventory/failure data - protect folder ACL.
+
+================================================================================
+8. WHEN TO USE WHAT
+================================================================================
+
+  Scenario                                      Best mode
+  -------------------------------------------   --------------------
+  Live health check of BigFix estate            Connect API (async)
+  API down / firewall block                     Import Report or -UseCache
+  Training / demo                               Load Demo
+  Ad-hoc analysis of an emailed CSV             Import Report
+  Validate script after editing rules           -SelfTest (CLI)
+  Daily HTML for leadership                     Headless -ExportHtml + task
+  Ticket / ServiceNow feed                      CSV/JSON export or webhook
+  Apply matched remote fixes                    Remote Fix tab (WinRM)
+  Day-to-day ops guidance                       Runbook
+
+================================================================================
+9. EXTENDING THE TOOL
+================================================================================
+
+  New root-cause rule: append to $script:RootCauseRules (Id, Pattern,
+  Category, Severity, RootCause, Remediation). Add $script:FixSolutions[Id]
+  for Remote Fix (or category default in $script:FixCategoryDefaults).
+
+  New runbook topic: append to $script:RunbookTopics (Id, Title, Tags,
+  Summary, RootCause, Steps, Refs).
+
+  After edits: powershell -File BigFix-FailureDashboard.ps1 -SelfTest
+
+================================================================================
+10. TROUBLESHOOTING
+================================================================================
+
+  Cannot reach BigFix API
+    - Verify URL, port 52311, VPN, Skip TLS, Can use REST API permission.
+
+  CSV must include a device column
+    - Header: DeviceName / Computer / Name.
+
+  Window does not open
+    - powershell -STA -ExecutionPolicy Bypass -File BigFix-FailureDashboard.ps1
+
+  JIT dialog / "Argument types do not match" on open
+    - Fixed in v2.0.0 (if-expression boxing of List[object]).
+    - Pull current BigFix-FailureDashboard.ps1; re-run -SelfTest.
+    - Inspect %TEMP%\BigFixDashboard-UIErrors.log if it recurs.
+
+  Connect API: "BigFix API connection failed ... Argument types do not match"
+    - Fixed in v2.0.0 Issue C: ConvertTo-ApiResultJson used @($List[object]).
+    - Pull current BigFix-FailureDashboard.ps1; re-run -SelfTest.
+    - Reconnect to the BigFix server; status should show "Devices loaded...".
+
+  Settings / Email / Ticket do nothing or "not enabled"
+    - Fixed in v2.0.0 Issue D: Settings form overflow; Save/ticket off-screen.
+    - Pull current .ps1; Settings -> enable + fill required fields -> Save.
+    - Status bar should show "Settings saved to ...settings.json".
+    - Email/Ticket prompt to open Settings when disabled; SMTP password is
+      session-only (Settings password box or $env:BIGFIX_SMTP_PASSWORD).
+
+  Chart titles / "property Text cannot be found"
+    - Fixed in v2.0.0 (New-DashChart $title vs $Title case collision).
+
+  Connect seems slow / stuck
+    - Status bar shows ApiWorker phase progress; wait for job completion.
+    - Check cache\last-pull.json timestamp after success.
+
+  Charts tab empty
+    - DataVisualization unavailable; label fallback is expected.
+
+  Email fails
+    - Settings -> SMTP host/port/from/to; $env:BIGFIX_SMTP_PASSWORD.
+
+  Remote Fix: WinRM-Failed
+    - Use Test WinRM (pre-flight); Test-WSMan <host>; enable WinRM;
+      admin creds; raise Timeout if the host is slow.
+
+  Remote Fix: empty plan
+    - Load data; widen scope; severity = All severities; uncheck
+      Healthy-only filters.
+
+================================================================================
+END OF DOCUMENT
+================================================================================

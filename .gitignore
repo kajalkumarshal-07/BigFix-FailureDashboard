@@ -1,0 +1,22 @@
+# Runtime / local prefs (no secrets expected; machine-specific)
+settings.json
+
+# Generated reports (keep Run-DailyReport.ps1)
+reports/*.html
+reports/*.csv
+reports/*.json
+reports/*.log
+reports/history/
+
+# Local diagnostic / temp
+*.log
+__pycache__/
+*.tmp
+
+# Editor / OS
+.vs/
+.vscode/
+*.swp
+Thumbs.db
+Desktop.ini
+.DS_Store
