@@ -81,6 +81,7 @@
 - [Quick start](#quick-start)
 - [Headless / scheduled use](#headless--scheduled-use)
 - [How it works](#how-it-works)
+- [Deployment & server load](#deployment--server-load)
 - [GUI layout](#gui-layout)
 - [Remote Fix (WinRM)](#remote-fix-winrm)
 - [Remote fix catalog](#remote-fix-catalog)
@@ -133,7 +134,7 @@ BigFix-FailureDashboard\
 │   ├── bf-report-YYYYMMDD.html
 │   ├── history\bf-report-*.csv|json
 │   └── last-run.log
-├── BigFix_Failure_Dashboard_…pptx  Feature / admin-benefits deck (20 slides)
+├── BigFix_Failure_Dashboard_…pptx  Feature / admin-benefits deck (21 slides)
 └── sample-data\
     └── sample-failures.csv       Sample import for offline testing
 ```
@@ -261,6 +262,26 @@ Dry-run verified: wrapper exit `0`, HTML written. After a real API pull, the tas
 - **settings.json** — server URL, user, offline hours, auto-refresh minutes, SMTP, ticket webhook, export dir, device-view flag. **Passwords never written.**
 - **cache\last-pull.json** — last successful API payload for `-UseCache` / offline refresh.
 - **Critical alerts** — when critical count rises, optional tray balloon (NotifyIcon) + status text.
+
+---
+
+## Deployment & server load
+
+**Runs anywhere** — Console workstation, admin laptop, NOC desktop, or the root server itself. Nothing from the BigFix Console is read or modified; requirements are Windows PowerShell 5.1, reachability to **TCP 52311**, and an operator with **Can use REST API**.
+
+**Load per full pull (Connect API / Refresh)** — read-only, ~6–8 HTTP GETs:
+
+| Step | Requests | Root-server cost |
+|------|----------|------------------|
+| `GET /api/help`, `/api/computers`, `/api/actions` + hostname query | 4 | Light — inventory/action XML build + DB read |
+| Failed-fixlet + compliance relevance scans (parallel) | 2 | **Main CPU cost** — session relevance over computers × failed actions |
+| Fallbacks / retries | ≤2 per query (backoff 1s/2s on transient 5xx/timeout); ≤3 auth probes on 401 | Bounded worst case |
+| Concurrency | Max **3** parallel queries (runspace pool) | Cannot flood the server |
+
+- **Strictly read-only** — GET only; no writes, no DB locks, no client push.
+- **CPU** scales with estate size (computers × failed actions); **memory** is transient MB-scale response buffering — same profile as one Console operator query, then idle.
+- **Zero server load:** demo, CSV/XML import, cache refresh, exports, and the scheduled `-UseCache` report. **Remote Fix / Test WinRM** talk to endpoints directly (5985/5986), bypassing the root server entirely.
+- **Guidance:** auto-refresh ≥ 10–15 min on large estates (default `0` = off); one instance per shift rather than per operator.
 
 ---
 
